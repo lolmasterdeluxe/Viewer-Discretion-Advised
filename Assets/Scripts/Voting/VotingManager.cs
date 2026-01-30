@@ -173,6 +173,15 @@ public class VotingManager : MonoBehaviour
     {
         votingActive = false;
 
+
+        // Auto vote for non-voters based on their current highlight
+        for (int p = 0; p < 4; p++)
+        {
+            if (!hasVoted[p])
+            {
+                CastVote(p); 
+            }
+        }
         //Find winner
         int winner = 0;
         for (int i = 1; i < 4; i++)

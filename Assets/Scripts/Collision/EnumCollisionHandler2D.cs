@@ -9,13 +9,13 @@ public class EnumCollisionHandler2D : MonoBehaviour
         {
             switch (collidable.types)
             {
-                case CollidableTypes.Player:
-                    Debug.Log("Collided with Player");
+                case CollidableTypes.PlayerMask:
+                    Debug.Log("Collided with PlayerMask");
                     //Add custom behaviour here
                     break;
 
-                case CollidableTypes.Enemy:
-                    Debug.Log("Collided with Enemy");
+                case CollidableTypes.NPC:
+                    Debug.Log("Collided with NPC");
                     //Add custom behaviour here
                     break;
                
@@ -24,11 +24,15 @@ public class EnumCollisionHandler2D : MonoBehaviour
                     //Add custom behaviour here
                     break;
                 
-                case CollidableTypes.PowerUp:
-                    Debug.Log("Collided with PowerUp");
+                case CollidableTypes.Projectile:
+                    Debug.Log("Collided with Projectile");
                     //Add custom behaviour here
                     break;
-
+                
+                case CollidableTypes.Melee:
+                    Debug.Log("Collided with Melee Attack");
+                    //Add custom behaviour here 
+                break;
                 default:
                     Debug.Log("Collided with Unknown Type");
                     break;
