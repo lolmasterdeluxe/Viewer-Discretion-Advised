@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Hitman
   m_EditorClassIdentifier: Assembly-CSharp::NPCRangedShooter
   npcName: Hitman
-  description: Handgun User
-  sprite: {fileID: 2382053589436614086, guid: 681116ddc20a7d64a9c6c02992e4a822, type: 3}
-  maxHealth: 100
+  description: Handgun Professional
+  characterGameObject: {fileID: 1585771334948766870, guid: b05594b36a6bef14d98c943fe267fd5a, type: 3}
+  maxHealth: 120
   moveSpeed: 2.5
   attackDamage: 8
   attackRate: 1.3

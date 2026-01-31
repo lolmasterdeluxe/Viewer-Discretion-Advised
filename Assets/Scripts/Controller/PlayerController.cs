@@ -1,9 +1,7 @@
-    using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(PlayerInput))]
-public class PlayerControllerNewInput : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
@@ -19,10 +17,25 @@ public class PlayerControllerNewInput : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void OnMove(InputValue value)
+    // Subscribe to the channel when this object is enabled
+    private void OnEnable()
     {
-        moveInput = value.Get<Vector2>();
+        InputBroadcaster.MoveEvent += HandleMoveInput;
     }
+
+    // Unsubscribe when disabled (CRITICAL to prevent errors)
+    private void OnDisable()
+    {
+        InputBroadcaster.MoveEvent -= HandleMoveInput;
+    }
+
+    // This function runs whenever the Broadcaster yells "Move!"
+    private void HandleMoveInput(Vector2 direction)
+    {
+        moveInput = direction;
+    }
+
+
 
     private void FixedUpdate()
     {
