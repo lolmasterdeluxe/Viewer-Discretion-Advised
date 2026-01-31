@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,8 +15,34 @@ public class VotingManager : MonoBehaviour
     public Sprite[] npcPortraits; // All available NPC portraits (assign 10+ in Inpsector)
     public Canvas votingCanvas;
 
+    [Header("Spawning")]
+    public GameObject[] npcPrefabs;
+    public Transform spawnParent;
+
+    [Header("Set Generation")]
+    public int minTypesPerSet = 2;
+    public int maxTypesPerSet = 5;
+    public int minCountPerTtype = 1;
+    public int TotalNPCsPerSet = 10;
+
     [Header("Config")]
     public float voteTime = 10f; // 10 Seconds for voting
+
+    [System.Serializable]
+    public class NpcCount
+    {
+        public int typeIndex;
+        public int count;
+    }
+
+    [System.Serializable]
+    public class NpcSet
+    {
+        public List<NpcCount> composition = new List<NpcCount>();
+        public Sprite displaySprite;
+    }
+
+    private NpcSet[] currentSets = new NpcSet[4];
 
     private Image[][] playerHighlights;
     private KeyCode[,] playerInputKeys = new KeyCode[4, 5] // 4 players, 5 keys each, WASD + E for player 1, Arrow keys + Enter for player 2, etc.
@@ -127,16 +154,17 @@ public class VotingManager : MonoBehaviour
     //call this from game manager to start voting
     public void StartVoting()
     {
-        //Randomly slect 4 NPcs
-        List<Sprite> pool = new List<Sprite>(npcPortraits);
-        Shuffle(pool);
+        GenerateFourDistinctsSets();
 
         for(int i = 0; i < 4; i++)
         {
 
-            npcImages[i].sprite = pool[i];
+            npcImages[i].sprite = currentSets[i].displaySprite ?? npcPortraits[0];
             voteTexts[i].text = "0";
             voteCounts[i] = 0;
+
+            // Optional: show compposition in UI (you need extra UI Text objects)
+            // e.g. SetCompositionText(i, currentSets[i]);
         }
 
         // Reset players (start all on slot 0)
@@ -159,13 +187,79 @@ public class VotingManager : MonoBehaviour
         votingCanvas.gameObject.SetActive(true);
     }
 
+    private void GenerateFourDistinctsSets()
+    {
+       HashSet<string> usedSignatures = new HashSet<string>();
+        
+        for (int i = 0; i < 4; i++)
+        {
+            NpcSet set;
+            string sig;
+            int safety = 0;
+
+            do
+            {
+                set = GenerateRandomSet();
+                sig = GetSetSignature(set);
+                safety++;
+            }
+            while (usedSignatures.Contains(sig) && safety < 50);
+
+            usedSignatures.Add(sig);
+            currentSets[i] = set;
+
+            Debug.Log($"Set {i + 1}: {FormatSet(set)}");
+        }
+    }
+
+    private NpcSet GenerateRandomSet()
+    {
+        NpcSet set = new NpcSet();
+
+        int numTypes = Random.Range(minTypesPerSet, maxTypesPerSet + 1);
+        var available = Enumerable.Range(0, npcPrefabs.Length).ToList();
+        available = available.OrderBy(x => Random.value).Take(numTypes).ToList();
+
+        int remaining = TotalNPCsPerSet;
+
+        for (int i = 0; i < numTypes; i++)
+        {
+          int maxTake = remaining - (numTypes - i - 1);
+          int take = Random.Range(minCountPerTtype, maxTake + 1);
+          set.composition.Add(new NpcCount { typeIndex = available[i], count = take });
+          remaining -= take;
+        }
+
+        // last type gets remainder
+        set.composition.Add(new NpcCount { typeIndex = available[^1], count = remaining });
+
+        // Choose representative sprite (e.g. most numerous type)
+        var dominant = set.composition.OrderByDescending(c => c.count).First();
+        set.displaySprite = npcPortraits[dominant.typeIndex];
+
+        return set;
+    }
+
+    private string GetSetSignature(NpcSet set)
+    {
+        var sorted = set.composition
+            .OrderBy(c => c.typeIndex)
+            .Select(c => $"{c.typeIndex}:{c.count}");
+        return string.Join("|", sorted);
+    }
+
+    private string FormatSet(NpcSet set)
+    {
+        return string.Join(", ", set.composition.Select(c => $"{c.count}× T{c.typeIndex}"));
+    }
+
     private void Shuffle<T>(List<T> list)
     {
         for (int i = 0; i < list.Count; i++)
         {
-            int randomIndex = Random.Range(i, list.Count);
-            T temp = list[randomIndex];
-            list[randomIndex] = list[i];
+            int rnd = Random.Range(i, list.Count);
+            T temp = list[rnd];
+            list[rnd] = list[i];
             list[i] = temp;
         }
     }
@@ -190,18 +284,43 @@ public class VotingManager : MonoBehaviour
             {
                 winner = i;
             }
-            Debug.Log($"NPC {i + 1} won by receiving {voteCounts[i]} votes.");
+            Debug.Log($"Winning set {winner + 1} with {voteCounts[winner]} votes → {FormatSet(currentSets[winner])}");
 
             // Show results for 3 seconds, the hide
-            StartCoroutine(ShowResults(3f));
+            StartCoroutine(ShowResultsAndSpawn(winner, 3f));
         }
     }
 
-    private IEnumerator ShowResults(float delay)
+    private IEnumerator ShowResultsAndSpawn(int winnerIndex, float delay)
     {
-       
+        // You can improve UI here: flash winner slot, show full composition, etc.
         yield return new WaitForSeconds(delay);
+
         votingCanvas.gameObject.SetActive(false);
+
+        SpawnSet(currentSets[winnerIndex]);
+    }
+
+    private void SpawnSet(NpcSet set)
+    {
+        // Optional: destroy old NPCs
+        // if (spawnParent != null)
+        //     foreach (Transform child in spawnParent) Destroy(child.gameObject);
+
+        foreach (var entry in set.composition)
+        {
+            GameObject prefab = npcPrefabs[entry.typeIndex];
+            for (int i = 0; i < entry.count; i++)
+            {
+                Vector3 pos = Random.insideUnitSphere * 15f; // ← very basic random spread – improve!
+                pos.y = 0f;
+                Quaternion rot = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+
+                var instance = Instantiate(prefab, pos, rot);
+                if (spawnParent != null)
+                    instance.transform.SetParent(spawnParent);
+            }
+        }
     }
 
 }
