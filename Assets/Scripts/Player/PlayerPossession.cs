@@ -65,6 +65,8 @@ public class PlayerPossession : MonoBehaviour
 
     private void PerformPossession()
     {
+        Debug.Log("Attempting possession...");
+        SoundManager.Instance.PlaySFX("SFX/FightPhaseSFX/Possessing");
         var npcData = collisionHandler.CurrentPossessableNPCData;
         var npcObj = collisionHandler.CurrentPossessableNPC;
 

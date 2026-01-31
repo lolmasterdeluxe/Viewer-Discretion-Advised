@@ -50,7 +50,7 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        if (defaultMusic != null) PlayMusic("default"); // Or auto-play defaultMusic
+        if (defaultMusic != null) PlayMusic("MenuBGMLoop"); // Or auto-play defaultMusic
     }
 
     #region Public API - Easy to use from other scripts
