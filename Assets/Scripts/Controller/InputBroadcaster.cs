@@ -9,6 +9,7 @@ public class InputBroadcaster : MonoBehaviour
     public static event Action<Vector2> MoveEvent;
     public static event Action PossessEvent;
     public static event Action ExorciseEvent;
+    public static event Action AttackEvent;
 
     // Called by PlayerInput component
     public void OnMove(InputValue value)
@@ -25,5 +26,10 @@ public class InputBroadcaster : MonoBehaviour
     public void OnExorcise(InputValue value)
     {
         if (value.isPressed) ExorciseEvent?.Invoke();
+    }
+
+    public void OnAttack(InputValue value)
+    {
+        if (value.isPressed) AttackEvent?.Invoke();
     }
 }

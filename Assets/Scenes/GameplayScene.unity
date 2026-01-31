@@ -565,11 +565,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1911568219757451358, guid: b05594b36a6bef14d98c943fe267fd5a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.09233
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1911568219757451358, guid: b05594b36a6bef14d98c943fe267fd5a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.99467
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1911568219757451358, guid: b05594b36a6bef14d98c943fe267fd5a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1244,6 +1244,52 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &1370678996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1370678998}
+  - component: {fileID: 1370678997}
+  m_Layer: 0
+  m_Name: Bullet Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1370678997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370678996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 515789ef0fc1c2b4ca5525688c21794f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BulletPool
+  bulletPrefab: {fileID: 100611127935315335, guid: 9ad26dd7e07b774488ca966b25c479a4, type: 3}
+  initialPoolSize: 15
+--- !u!4 &1370678998
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370678996}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1415272278
 GameObject:
   m_ObjectHideFlags: 0
@@ -4099,3 +4145,4 @@ SceneRoots:
   - {fileID: 1532995984}
   - {fileID: 2129142358}
   - {fileID: 1648776675}
+  - {fileID: 1370678998}
