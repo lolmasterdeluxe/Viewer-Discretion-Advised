@@ -1,25 +1,27 @@
 ﻿using UnityEngine;
-// Script to be attached to playerobject to handle possession mechanics
+using UnityEngine.InputSystem;
+
+// Input system updated by Gemini
+
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerPossession : MonoBehaviour
 {
     [Header("Possession")]
-    public KeyCode possessKey = KeyCode.E;
+    // keys are now handled by the Input System Asset, not here
     public GameObject possessionEffectPrefab;
 
     [Header("State")]
-    [SerializeField] private bool isPossessing = false;           // are we currently an NPC?
-    [SerializeField] private KeyCode exorciseKey = KeyCode.Q;     // optional: return to human form
+    [SerializeField] private bool isPossessing = false;
 
     private EnumCollisionHandler2D collisionHandler;
     private PlayerStats playerStats;
     private SpriteRenderer spriteRenderer;
 
-
-    // Optional: remember original stats / appearance so we can revert
+    // Original stats storage
     private float originalMaxHealth;
     private float originalMoveSpeed;
-    // ... add other base stats you want to restore
     private Sprite originalSprite;
+
     private void Awake()
     {
         collisionHandler = GetComponent<EnumCollisionHandler2D>();
@@ -32,29 +34,39 @@ public class PlayerPossession : MonoBehaviour
             enabled = false;
         }
 
-        // Remember original ("human") values once at start
         SaveOriginalStats();
     }
 
-    private void Update()
+    // ---------------------------------------------------------
+    // NEW INPUT SYSTEM METHODS
+    // These names must match your Input Actions (e.g., Action "Possess" -> OnPossess)
+    // ---------------------------------------------------------
+
+    public void OnPossess(InputValue value)
     {
-        if (collisionHandler.canPossess && Input.GetKeyDown(possessKey))
+        // Check if button is pressed down (value.isPressed) 
+        // AND if we are allowed to possess
+        if (value.isPressed && collisionHandler.canPossess)
         {
             PerformPossession();
         }
+    }
 
-        // Optional: allow player to leave possessed body
-        if (isPossessing && Input.GetKeyDown(exorciseKey))
+    public void OnExorcise(InputValue value)
+    {
+        // Check if button is pressed AND we are currently possessing someone
+        if (value.isPressed && isPossessing)
         {
             RevertToOriginalForm();
         }
     }
 
+    // ---------------------------------------------------------
+
     private void SaveOriginalStats()
     {
         originalMaxHealth = playerStats.maxHealth;
         originalMoveSpeed = playerStats.moveSpeed;
-        // originalAttackDamage = playerStats.attackDamage;  // etc.
         originalSprite = spriteRenderer.sprite;
     }
 
@@ -75,33 +87,30 @@ public class PlayerPossession : MonoBehaviour
         playerStats.attackRate = npcData.attackRate;
         playerStats.attackRange = npcData.attackRange;
 
-        // Optional visuals
+        // Apply visuals
         if (spriteRenderer != null && npcData.sprite != null)
             spriteRenderer.sprite = npcData.sprite;
 
         if (possessionEffectPrefab != null)
             Instantiate(possessionEffectPrefab, transform.position, Quaternion.identity);
 
-        // Remove original NPC
+        // Remove the NPC from the world
         Destroy(npcObj);
 
         isPossessing = true;
-
     }
+
     private void RevertToOriginalForm()
     {
         Debug.Log("Exorcised – returned to original form");
 
         // Restore base stats
         playerStats.maxHealth = originalMaxHealth;
-        playerStats.currentHealth = Mathf.Min(playerStats.currentHealth, originalMaxHealth); // don't overheal
+        playerStats.currentHealth = Mathf.Min(playerStats.currentHealth, originalMaxHealth);
         playerStats.moveSpeed = originalMoveSpeed;
-        // restore other stats you saved...
 
         // Restore appearance
         spriteRenderer.sprite = originalSprite;
-
-        // Optional: spawn effect, sound, etc.
 
         isPossessing = false;
     }
