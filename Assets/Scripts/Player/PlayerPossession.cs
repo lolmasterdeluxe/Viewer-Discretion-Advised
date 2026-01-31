@@ -83,9 +83,6 @@ public class PlayerPossession : MonoBehaviour
                 playerStats.maxHealth = npcData.maxHealth;
                 playerStats.currentHealth = npcData.maxHealth;
                 playerStats.moveSpeed = npcData.moveSpeed;
-                playerStats.attackDamage = npcData.attackDamage;
-                playerStats.attackRate = npcData.attackRate;
-                playerStats.attackRange = npcData.attackRange;
             }
         }
 

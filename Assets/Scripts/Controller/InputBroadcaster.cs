@@ -9,7 +9,8 @@ public class InputBroadcaster : MonoBehaviour
     public static event Action<Vector2> MoveEvent;
     public static event Action PossessEvent;
     public static event Action ExorciseEvent;
-    public static event Action AttackEvent;
+    // NEW: Fire event that tells listeners if the button is pressed (true) or released (false)
+    public static event Action<bool> AttackEvent;
 
     // Called by PlayerInput component
     public void OnMove(InputValue value)
@@ -28,8 +29,10 @@ public class InputBroadcaster : MonoBehaviour
         if (value.isPressed) ExorciseEvent?.Invoke();
     }
 
+    // NEW: This function catches the Input System signal
     public void OnAttack(InputValue value)
     {
-        if (value.isPressed) AttackEvent?.Invoke();
+        // Broadcasts "true" when pressed, "false" when released
+        AttackEvent?.Invoke(value.isPressed);
     }
 }
