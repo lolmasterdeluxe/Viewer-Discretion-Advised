@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NPCData", menuName = "Scriptable Objects/NPCData")]
 public abstract class NPCData : ScriptableObject
 {
     [Header("Basic Identity")]
@@ -40,7 +39,6 @@ public class NPCMeleeBasic : NPCData
 
     private void OnValidate()
     {
-        npcName = "Melee";
         maxHealth = Mathf.Clamp(maxHealth, 80f, 180f);
         moveSpeed = Mathf.Clamp(moveSpeed, 1.8f, 3.2f);
         attackDamage = Mathf.Clamp(attackDamage, 10f, 22f);
@@ -62,7 +60,6 @@ public class NPCRangedShooter : NPCData
 
     private void OnValidate()
     {
-        npcName = "Ranged Shooter";
         maxHealth = Mathf.Clamp(maxHealth, 50f, 120f);
         moveSpeed = Mathf.Clamp(moveSpeed, 1.5f, 3.5f);
         attackDamage = Mathf.Clamp(attackDamage, 6f, 18f);

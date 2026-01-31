@@ -19,10 +19,10 @@ public class EnumCollisionHandler2D : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) // Physical collisions
+    private void OnTriggerEnter2D(Collider2D collider) // Physical collisions
     {
 
-        var otherType = collision.collider.GetComponent<CollidableType>();
+        var otherType = collider.GetComponent<CollidableType>();
         if (otherType == null) return;
 
         // myType is based on object this script is attached to
@@ -39,11 +39,11 @@ public class EnumCollisionHandler2D : MonoBehaviour
                         break;
 
                     case CollidableTypes.NPC:
-                        NPCData npcData = GetNPCData(collision.gameObject);
+                        NPCData npcData = GetNPCData(collider.gameObject);
                         if (npcData != null)
                         {
                             CurrentPossessableNPCData = npcData;
-                            CurrentPossessableNPC = collision.gameObject;
+                            CurrentPossessableNPC = collider.gameObject;
                             canPossess = true;
                             Debug.Log("Player bumped into NPC → maybe dialogue / push?");
                         }
@@ -61,13 +61,13 @@ public class EnumCollisionHandler2D : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collider)
     {
-        var otherTypeComp = collision.collider.GetComponent<CollidableType>();
+        var otherTypeComp = collider.GetComponent<CollidableType>();
         if (otherTypeComp == null) return;
 
         if (otherTypeComp.types == CollidableTypes.NPC &&
-            collision.gameObject == CurrentPossessableNPC)
+            collider.gameObject == CurrentPossessableNPC)
         {
             canPossess = false;
             CurrentPossessableNPC = null;

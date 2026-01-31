@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e18f25c43d83f2c498fb987047da68a5
+guid: 2ab3b33ff1b2b5048b6d226f6aeaf445
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5881447757479353475
-    second: bow_red_0
+      213: 2064833454359975104
+    second: VenetianMask_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -97,7 +97,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -110,7 +110,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bow_red_0
+      name: VenetianMask_0
       rect:
         serializedVersion: 2
-        x: 147
-        y: 180
-        width: 244
-        height: 341
+        x: 46
+        y: 0
+        width: 257
+        height: 350
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 38c139df2991f9150800000000000000
-      internalID: 5881447757479353475
+      spriteID: 0c418773613c7ac10800000000000000
+      internalID: 2064833454359975104
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      bow_red_0: 5881447757479353475
+      VenetianMask_0: 2064833454359975104
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
