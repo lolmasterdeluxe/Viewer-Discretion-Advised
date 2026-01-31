@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 6099032536342641018}
   m_Layer: 0
   m_Name: Henderson
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37,6 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7344602234322063323}
+  - {fileID: 1058177419187182085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4900652391105489003
@@ -148,7 +149,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 5
   m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -188,7 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControllerNewInput
   moveSpeed: 5
-  snapRotation: 1
+  snapRotation: 0
   rotationSpeed: 720
 --- !u!114 &6661049668007521830
 MonoBehaviour:
@@ -224,6 +225,113 @@ MonoBehaviour:
   fireMode: 1
   fireRate: 10
   spreadAngle: 15
+  muzzleFlash: {fileID: 2590867355543483389}
+  muzzleFlashes:
+  - {fileID: 1736477171591450160, guid: 16bce440bd26d7e4cb5ed537a8a2c755, type: 3}
+  - {fileID: 4362246869160309727, guid: f7b97b57fdc74ed4ba13a7d21febb7c6, type: 3}
+  - {fileID: 9045284508814411477, guid: d42df3d2c493c9042a42d79fe317eb14, type: 3}
+  - {fileID: -4568388414864815000, guid: 2c3c578e1d1079a4db0813ace203bbea, type: 3}
+  - {fileID: 6620450109973708068, guid: 155eea2eae3984945aa23f8534f23bc6, type: 3}
+  - {fileID: 4662947417862519801, guid: 6dd6dc4d2eef51a4898b53a5e8cbffe9, type: 3}
+  - {fileID: -502810764530083959, guid: 7edcd4ba0ddb73848872fcf5e6cff8c4, type: 3}
+  - {fileID: 9023450314322266015, guid: 54e3f278a2cbe074bbe285c26c124088, type: 3}
+  - {fileID: -7033302374791935037, guid: 1fc86ec8033d5234fbb6aa7ef96e3203, type: 3}
+  shakeDuration: 0.05
+  shakeMagnitude: 0.03
+  flashDuration: 0.01
+  timer: 0
+  recoilForce: 1
+--- !u!1 &2590867355543483389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1058177419187182085}
+  - component: {fileID: 2084974024071926895}
+  m_Layer: 0
+  m_Name: Muzzle Flash Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1058177419187182085
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2590867355543483389}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.541, y: -0.2, z: 0}
+  m_LocalScale: {x: 0.075, y: 0.075, z: 0.075}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 8284616010777991824}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &2084974024071926895
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2590867355543483389}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 1736477171591450160, guid: 16bce440bd26d7e4cb5ed537a8a2c755, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 5.5, y: 4.96}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1 &2873278796970738372
 GameObject:
   m_ObjectHideFlags: 0

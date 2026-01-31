@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    [Header("Player Stats (updated on possession)")]
+    [Header("Player Stats")]
     public float maxHealth = 100f;
     public float currentHealth = 100f;
     public float moveSpeed = 5f;

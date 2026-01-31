@@ -78,7 +78,10 @@ public class PlayerPossession : MonoBehaviour
 
     private void PerformPossession(NPCData npcData, GameObject npcObj)
     {
+<<<<<<< Updated upstream
         SoundManager.Instance.PlaySFX("SFX/FightPhaseSFX/Possessing");
+=======
+>>>>>>> Stashed changes
         if (npcData == null || npcObj == null) return;
 
         Debug.Log($"Possessed → {npcData.npcName}");

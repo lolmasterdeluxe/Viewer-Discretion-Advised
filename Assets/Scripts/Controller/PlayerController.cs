@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 moveInput;
 
+    private bool isRecoiling = false;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -35,12 +37,26 @@ public class PlayerController : MonoBehaviour
         moveInput = direction;
     }
 
+    // Call this from your Shooting Script
+    public void ApplyRecoil(Vector2 force, float duration)
+    {
+        rb.AddForce(force, ForceMode2D.Impulse);
+        isRecoiling = true;
+        Invoke(nameof(StopRecoil), duration);
+    }
+
+    private void StopRecoil()
+    {
+        isRecoiling = false;
+        rb.linearVelocity = Vector2.zero; // Kill the recoil momentum
+    }
 
 
     private void FixedUpdate()
     {
-        // 1. Handle Movement
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        // ONLY move if we are NOT recoiling
+        if (!isRecoiling)
+            rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
 
         // 2. Handle Rotation
         // We only rotate if there is actual input, otherwise the character 
@@ -64,5 +80,7 @@ public class PlayerController : MonoBehaviour
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             }
         }
+
+        
     }
 }

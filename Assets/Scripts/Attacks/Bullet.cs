@@ -7,45 +7,50 @@ public class Bullet : MonoBehaviour
     [SerializeField] private int damage = 1;
 
     private Rigidbody2D rb;
+    private GameObject owner; // The specific player who shot this
 
-    private void Awake()
+    private void Awake() => rb = GetComponent<Rigidbody2D>();
+
+    // We add a new Setup function to pass data when spawning
+    public void Initialize(GameObject shooter, Vector3 position, Quaternion rotation)
     {
-        rb = GetComponent<Rigidbody2D>();
-    }
+        owner = shooter;
 
-    // OnEnable is called every time the bullet comes out of the pool
-    private void OnEnable()
-    {
-        // 1. Reset Velocity (In case it had leftover momentum)
-        rb.linearVelocity = transform.right * speed; // Use transform.up if your sprite faces up
+        transform.position = position;
+        transform.rotation = rotation; // Use the spread rotation passed in
 
-        // 2. Start the "Disable" timer
+        gameObject.SetActive(true);
+
+        // Reset velocity using the NEW rotation (this ensures it flies in the spread direction)
+        rb.linearVelocity = transform.right * speed;
+
         Invoke(nameof(DisableBullet), lifeTime);
     }
 
-    private void OnDisable()
-    {
-        // Cancel the timer so it doesn't trigger if we re-enable quickly
-        CancelInvoke();
-    }
+    private void OnDisable() => CancelInvoke();
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Example collision logic
-        if (other.CompareTag("Enemy"))
+        Debug.Log("Owner: " + owner);
+
+        // 1. IGNORE THE OWNER
+        if (other.gameObject == owner) return; 
+
+        // 2. IGNORE OTHER BULLETS (Optional, prevents mid-air collisions)
+        if (other.GetComponent<Bullet>() != null) return;
+
+        // 3. HIT LOGIC
+        if (other.CompareTag("Player") || other.CompareTag("NPC"))
         {
-            // other.GetComponent<EnemyHealth>().TakeDamage(damage);
-            DisableBullet(); // Hide bullet on impact
+            // other.GetComponent<PlayerHealth>().TakeDamage(damage);
+            DisableBullet();
         }
-        else if (other.CompareTag("Wall"))
+        else if (other.CompareTag("Obstacle"))
         {
             DisableBullet();
         }
-        DisableBullet();
+        Debug.Log("Other: " + other);
     }
 
-    private void DisableBullet()
-    {
-        gameObject.SetActive(false); // Return to "pool" effectively
-    }
+    private void DisableBullet() => gameObject.SetActive(false);
 }

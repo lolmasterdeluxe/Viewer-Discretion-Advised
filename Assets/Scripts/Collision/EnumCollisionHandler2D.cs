@@ -34,7 +34,7 @@ public class EnumCollisionHandler2D : MonoBehaviour
                 switch (otherType.types)
                 {
                     case CollidableTypes.Projectile:
-                        Debug.Log("Player hit by bullet! Take damage / knockback");
+                        // Debug.Log("Player hit by bullet! Take damage / knockback");
                         // TakeDamage();
                         break;
 
