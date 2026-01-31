@@ -4,30 +4,25 @@ using UnityEngine;
 // Input system updated by Gemini
 public class PlayerPossession : MonoBehaviour
 {
-    [Header("Possession")]
-    // keys are now handled by the Input System Asset, not here
+    [Header("Possession Settings")]
+    [SerializeField] private float possessRange = 3f;
+    [SerializeField] private LayerMask npcLayer; // Set this to "NPC" in Inspector
     public GameObject possessionEffectPrefab;
 
     [Header("State")]
     [SerializeField] private bool isPossessing = false;
 
-    private EnumCollisionHandler2D collisionHandler;
     private PlayerStats playerStats;
     private SpriteRenderer spriteRenderer;
+    private Collider2D collider;
 
     [SerializeField]
     private GameObject playerCharacter;
 
     private void Awake()
     {
-        collisionHandler = GetComponent<EnumCollisionHandler2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (collisionHandler == null)
-        {
-            Debug.LogError("EnumCollisionHandler2D missing on player", this);
-            enabled = false;
-        }
+        collider = GetComponent<Collider2D>();
     }
 
     // ---------------------------------------------------------
@@ -38,38 +33,52 @@ public class PlayerPossession : MonoBehaviour
     // Subscribe to the channel when this object is enabled
     private void OnEnable()
     {
-        InputBroadcaster.PossessEvent += OnPossess;
-        InputBroadcaster.ExorciseEvent += OnExorcise;
+        InputBroadcaster.PossessEvent += TryPossess;
+        InputBroadcaster.ExorciseEvent += TryExorcise;
     }
 
-    // Unsubscribe when disabled (CRITICAL to prevent errors)
     private void OnDisable()
     {
-        InputBroadcaster.PossessEvent -= OnPossess;
-        InputBroadcaster.ExorciseEvent -= OnExorcise;
+        InputBroadcaster.PossessEvent -= TryPossess;
+        InputBroadcaster.ExorciseEvent -= TryExorcise;
     }
 
-    public void OnPossess()
+    public void TryPossess()
     {
-        if (collisionHandler.canPossess)
-            PerformPossession();
+        if (isPossessing) return;
+
+        // 1. SCAN FOR ENEMIES
+        // This works even if Physics Matrix collision is disabled!
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, possessRange, npcLayer);
+
+        if (hit != null)
+        {
+            NPCDataHolder dataHolder = hit.gameObject.GetComponent<NPCDataHolder>();
+
+            if (dataHolder.Data != null)
+            {
+                PerformPossession(dataHolder.Data, hit.gameObject);
+            }
+        }
     }
 
-    public void OnExorcise()
+    private void TryExorcise()
     {
-        if (isPossessing)
-            RevertToOriginalForm();
+        if (isPossessing) RevertToOriginalForm();
+    }
+
+    // DEBUG: Draw the range in Scene View
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, possessRange);
     }
 
     // ---------------------------------------------------------
 
-    private void PerformPossession()
+    private void PerformPossession(NPCData npcData, GameObject npcObj)
     {
-        Debug.Log("Attempting possession...");
         SoundManager.Instance.PlaySFX("SFX/FightPhaseSFX/Possessing");
-        var npcData = collisionHandler.CurrentPossessableNPCData;
-        var npcObj = collisionHandler.CurrentPossessableNPC;
-
         if (npcData == null || npcObj == null) return;
 
         Debug.Log($"Possessed → {npcData.npcName}");
@@ -97,6 +106,7 @@ public class PlayerPossession : MonoBehaviour
         isPossessing = true;
 
         spriteRenderer.enabled = false;
+        collider.enabled = false;
     }
 
     private void RevertToOriginalForm()
@@ -105,8 +115,12 @@ public class PlayerPossession : MonoBehaviour
 
         // Restore appearance
         spriteRenderer.enabled = true;
+        collider.enabled = true;
         Destroy(playerCharacter);
 
         isPossessing = false;
     }
 }
+
+
+
