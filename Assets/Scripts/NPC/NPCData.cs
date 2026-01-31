@@ -7,7 +7,7 @@ public abstract class NPCData : ScriptableObject
     public string description = "";
 
     [Header("Visual")]
-    public Sprite sprite;
+    public GameObject characterGameObject;
 
     [Header("Stats")]
     [Range(10f, 1000f)] public float maxHealth = 100f;
